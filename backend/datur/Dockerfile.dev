@@ -1,0 +1,11 @@
+FROM clojure:temurin-21-lein-2.11.2-jammy
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+# Load deps into build, should auto fetch new deps
+COPY project.clj /usr/src/app/
+RUN lein deps 
+COPY . /usr/src/app
+ENV JVM_OPTS="-Xmx3200m"
+RUN sysctl kernel.perf_event_paranoid=1
+RUN sysctl kernel.kptr_restrict=0
+CMD lein run
